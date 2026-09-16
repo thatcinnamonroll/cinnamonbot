@@ -1,0 +1,2 @@
+# cinnamonbot
+My discord bot
