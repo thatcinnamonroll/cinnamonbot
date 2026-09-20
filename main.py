@@ -3,7 +3,7 @@ import discord
 from discord.ext import commands
 import os
 from utils.youtube import youtube
-import time
+from utils.player import endOfMusic
 
 botDir = os.getcwd()
 # 0 is a placeholder value
@@ -25,8 +25,10 @@ async def startsong(ctx,songUrl):
         if not voice["isPlaying"]:
             await ctx.send("Holdup, setting up")
             channel = ctx.author.voice.channel
-            youtube.downloadSong(songUrl,botDir)
             songData = youtube.getMusicData(songUrl)
+
+            if not os.path.isfile(f"{botDir}/.cache/music/{songData["id"]}.opus"):
+                youtube.downloadSong(songUrl,botDir)
 
             client = await channel.connect()
             voice["vc"] = client
@@ -68,7 +70,10 @@ async def stop(ctx):
         vc.stop()
         await ctx.send("Stoping")
         await vc.disconnect()
-        voice = {"vc":0, "isPlaying":False}
+        # same empty val 0 as on the beginning of this file
+        voice["vc"] = 0
+        voice["isPlaying"] = False
+        voice["queue"] = []
     else:
         await ctx.send("Nothing is playing")
 
