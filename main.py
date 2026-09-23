@@ -12,6 +12,7 @@ voice = {"vc":0, "isPlaying":False,"queue":[]}
 with open(".data/settings.json","r") as settingsFile:
     settings = json.load(settingsFile)
     token = settings["token"]
+    allowedSongUrls = settings["allowedSongUrls"]
 
 intents = discord.Intents.default()
 intents.message_content = True
@@ -21,6 +22,10 @@ bot = commands.Bot(command_prefix='/', intents=intents)
 
 @bot.command()
 async def play(ctx,songUrl):
+    if not songUrl.startswith(tuple(allowedSongUrls)):
+        await ctx.send("That url is not supported, only supported services are youtube and soundcloud")
+        return
+
     if ctx.author.voice:
         await ctx.send("Holdup, setting up")
         song = youtube.getMusicData(songUrl)
