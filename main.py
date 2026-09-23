@@ -3,7 +3,7 @@ import discord
 from discord.ext import commands
 import os
 from utils.youtube import youtube
-from utils.player import endOfMusic
+from utils.playerHelper import startSong
 
 botDir = os.getcwd()
 # 0 is a placeholder value
@@ -20,29 +20,21 @@ intents.voice_states = True
 bot = commands.Bot(command_prefix='/', intents=intents)
 
 @bot.command()
-async def startsong(ctx,songUrl):
+async def play(ctx,songUrl):
     if ctx.author.voice:
-        if not voice["isPlaying"]:
-            await ctx.send("Holdup, setting up")
+        await ctx.send("Holdup, setting up")
+        song = youtube.getMusicData(songUrl)
+        song["url"] = songUrl
+        voice["queue"].append(song)
+        # if vc is 0 then bot is not connected to any voice channel
+        if voice["vc"] == 0:
             channel = ctx.author.voice.channel
-            songData = youtube.getMusicData(songUrl)
-
-            if not os.path.isfile(f"{botDir}/.cache/music/{songData["id"]}.opus"):
-                youtube.downloadSong(songUrl,botDir)
-
             client = await channel.connect()
             voice["vc"] = client
-            voice["isPlaying"] = True
-
-            source = await discord.FFmpegOpusAudio.from_probe(f".cache/music/{songData["id"]}.opus")
-            client.play(source)
-            await ctx.send("Done")
-        else:
-            songData = youtube.getMusicData(songUrl)
-            voice["queue"].append(songData["id"])
-            await ctx.send(f"Something is already plaing, adding {songData["name"]} to queue")
+        if not voice["isPlaying"]:
+            await startSong(botDir,voice)
     else:
-        await ctx.send('Cant play, you are not on any voice channel')
+        await ctx.send("Cant play, you are not on any voice channel")
 
 # wow how do you work
 @bot.command()
