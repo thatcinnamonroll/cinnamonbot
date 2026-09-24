@@ -86,6 +86,13 @@ async def stop(ctx):
     else:
         await ctx.send("Nothing is playing")
 
+@bot.command()
+async def botsay(ctx):
+    msg = ctx.message.content
+    await ctx.message.delete()
+    # cutting "/botsay " from message
+    await ctx.send(msg[8:])
+
 @bot.event
 async def on_message(message):
     if message.author == bot.user:
