@@ -37,9 +37,21 @@ async def play(ctx,songUrl):
             client = await channel.connect()
             voice["vc"] = client
         if not voice["isPlaying"]:
-            await startSong(botDir,voice)
+            await startSong(botDir,voice,ctx)
     else:
         await ctx.send("Cant play, you are not on any voice channel")
+
+@bot.command()
+async def queue(ctx):
+    if voice["queue"] == []:
+        await ctx.send("Queue is empty, feel free to add some songs :)")
+        return
+
+    msgList = ["SONGS IN QUEUE: \n"]
+    for song in voice["queue"]:
+        msgList.append(f"{song["title"]} -- by -- {song["author"]} \n")
+    msg = "".join(msgList)
+    await ctx.send(msg)
 
 # wow how do you work
 @bot.command()
