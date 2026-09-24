@@ -4,6 +4,10 @@ from discord.ext import commands
 import os
 from utils.youtube import youtube
 from utils.playerHelper import startSong
+from utils.botHelper import ensureCacheDir, ensureDataDir
+
+ensureCacheDir()
+ensureDataDir()
 
 botDir = os.getcwd()
 # 0 is a placeholder value
