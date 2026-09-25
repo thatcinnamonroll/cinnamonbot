@@ -10,13 +10,17 @@ ensureCacheDir()
 ensureDataDir()
 
 botDir = os.getcwd()
-# 0 is a placeholder value
-voice = {"vc":0, "isPlaying":False,"queue":[]}
 
 with open(".data/settings.json","r") as settingsFile:
     settings = json.load(settingsFile)
     token = settings["token"]
     allowedSongUrls = settings["allowedSongUrls"]
+    cookiesState = settings["cookies"]
+
+yt = youtube(cookiesState)
+
+# 0 is a placeholder value
+voice = {"vc":0, "isPlaying":False,"queue":[],"yt-man":yt}
 
 intents = discord.Intents.default()
 intents.message_content = True

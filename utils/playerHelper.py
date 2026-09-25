@@ -13,14 +13,15 @@ async def stopPlayer(voice,ctx):
     voice["isPlaying"] = False
     voice["queue"] = []
 
-async def startSong(botDir,voice,ctx):
+async def startSong(botDir,voice):
     # first song in the queue
     song = voice["queue"][0]
     # remove fist song in the queue so the first is new song
     voice["queue"].pop(0)
+    yt = voice["yt-man"]
 
     if not os.path.isfile(f"{botDir}/.cache/music/{song["id"]}.opus"):
-        youtube.downloadSong(song["url"],botDir)
+        yt.downloadSong(song["url"],botDir)
 
     client = voice["vc"]
 
