@@ -3,7 +3,7 @@ import discord
 from discord.ext import commands
 import os
 from utils.youtube import youtube
-from utils.playerHelper import startSong
+from utils.playerHelper import startSong, stopPlayer
 from utils.botHelper import ensureCacheDir, ensureDataDir
 
 ensureCacheDir()
@@ -79,14 +79,7 @@ async def resume(ctx):
 @bot.command()
 async def stop(ctx):
     if voice["isPlaying"]:
-        vc = voice["vc"]
-        vc.stop()
-        await ctx.send("Stoping")
-        await vc.disconnect()
-        # same empty val 0 as on the beginning of this file
-        voice["vc"] = 0
-        voice["isPlaying"] = False
-        voice["queue"] = []
+        stopPlayer(voice,ctx)
     else:
         await ctx.send("Nothing is playing")
 

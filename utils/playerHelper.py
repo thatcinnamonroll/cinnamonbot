@@ -3,6 +3,16 @@ import os
 import discord
 import asyncio
 
+async def stopPlayer(voice,ctx):
+    vc = voice["vc"]
+    vc.stop()
+    await ctx.send("Stopping playing")
+    await vc.disconnect()
+    # same empty val 0 as on the beginning of this file
+    voice["vc"] = 0
+    voice["isPlaying"] = False
+    voice["queue"] = []
+
 async def startSong(botDir,voice,ctx):
     # first song in the queue
     song = voice["queue"][0]
@@ -21,12 +31,17 @@ async def startSong(botDir,voice,ctx):
     await ctx.send(f"Playing {song["title"]} by {song["author"]}")
 
 def onSongEnd(botDir,voice,ctx,error):
-    try:
-        loop = voice["vc"].client.loop
-
+    loop = voice["vc"].client.loop
+    if not voice["queue"] == []:
+        try:
+            asyncio.run_coroutine_threadsafe(
+                startSong(botDir, voice,ctx),
+                loop
+            )
+        except Exception as err:
+            print(err)
+    else:
         asyncio.run_coroutine_threadsafe(
-            startSong(botDir, voice,ctx),
+            stopPlayer(voice,ctx),
             loop
         )
-    except Exception as err:
-        print(err)
