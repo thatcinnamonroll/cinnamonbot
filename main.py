@@ -36,7 +36,7 @@ async def play(ctx,songUrl):
 
     if ctx.author.voice:
         await ctx.send("Holdup, setting up")
-        song = youtube.getMusicData(songUrl)
+        song = youtube.getMusicData(songUrl,botDir)
         song["url"] = songUrl
         voice["queue"].append(song)
         # if vc is 0 then bot is not connected to any voice channel
