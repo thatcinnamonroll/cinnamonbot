@@ -36,7 +36,7 @@ class youtube:
         }
 
         if self._cookiesState == True:
-            ytdlpOptions["cookiefile"] = ".data/cookies.txt"
+            ydlpOpts["cookiefile"] = ".data/cookies.txt"
 
         with ytdlp.YoutubeDL(ydlpOpts) as ydl:
             info = ydl.extract_info(url, download=False)
