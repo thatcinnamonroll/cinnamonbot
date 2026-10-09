@@ -13,7 +13,7 @@ async def stopPlayer(voice,ctx):
     voice["isPlaying"] = False
     voice["queue"] = []
 
-async def startSong(botDir,voice):
+async def startSong(botDir,voice,ctx):
     # first song in the queue
     song = voice["queue"][0]
     # remove fist song in the queue so the first is new song
@@ -21,7 +21,7 @@ async def startSong(botDir,voice):
     yt = voice["yt-man"]
 
     if not os.path.isfile(f"{botDir}/.cache/music/{song["id"]}.opus"):
-        yt.downloadSong(song["url"],botDir)
+        yt.downloadSong(song["url"])
 
     client = voice["vc"]
 
@@ -36,7 +36,7 @@ def onSongEnd(botDir,voice,ctx,error):
     if not voice["queue"] == []:
         try:
             asyncio.run_coroutine_threadsafe(
-                startSong(botDir, voice,ctx),
+                startSong(voice,ctx),
                 loop
             )
         except Exception as err:

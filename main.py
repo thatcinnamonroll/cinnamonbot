@@ -17,7 +17,7 @@ with open(".data/settings.json","r") as settingsFile:
     allowedSongUrls = settings["allowedSongUrls"]
     cookiesState = settings["cookies"]
 
-yt = youtube(cookiesState)
+yt = youtube(cookiesState,botDir)
 
 # 0 is a placeholder value
 voice = {"vc":0, "isPlaying":False,"queue":[],"yt-man":yt}
@@ -36,7 +36,8 @@ async def play(ctx,songUrl):
 
     if ctx.author.voice:
         await ctx.send("Holdup, setting up")
-        song = youtube.getMusicData(songUrl,botDir)
+        ytman = voice["yt-man"]
+        song = ytman.getMusicData(songUrl)
         song["url"] = songUrl
         voice["queue"].append(song)
         # if vc is 0 then bot is not connected to any voice channel
@@ -83,7 +84,7 @@ async def resume(ctx):
 @bot.command()
 async def stop(ctx):
     if voice["isPlaying"]:
-        stopPlayer(voice,ctx)
+        await stopPlayer(voice,ctx)
     else:
         await ctx.send("Nothing is playing")
 

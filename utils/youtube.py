@@ -1,16 +1,17 @@
 import yt_dlp as ytdlp
 
 class youtube:
-    def __init__(self,cookies):
+    def __init__(self,cookies,botDir):
         self._cookiesState = cookies
+        self._botDir = botDir
 
-    def downloadSong(self,url,botDir):
+    def downloadSong(self,url):
         ytdlpOptions = {'extract_flat': 'discard_in_playlist',
         'format': 'bestaudio/best',
         'fragment_retries': 10,
         'outtmpl': {'default': '%(id)s.%(ext)s'},
         'ignoreerrors': 'only_download',
-        'paths': {'home': f"{botDir}/.cache/music"},
+        'paths': {'home': f"{self._botDir}/.cache/music"},
         'postprocessors': [{'key': 'FFmpegExtractAudio',
                             'nopostoverwrites': False,
                             'preferredcodec': 'opus',
