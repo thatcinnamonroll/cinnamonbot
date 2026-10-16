@@ -5,6 +5,7 @@ import os
 from utils.youtube import youtube
 from utils.playerHelper import startSong, stopPlayer
 from utils.botHelper import ensureCacheDir, ensureDataDir
+from utils.moderation import moderation
 
 ensureCacheDir()
 ensureDataDir()
@@ -17,7 +18,11 @@ with open(".data/settings.json","r") as settingsFile:
     allowedSongUrls = settings["allowedSongUrls"]
     cookiesState = settings["cookies"]
 
+with open(".data/dictionary.json","r") as dictionaryFile:
+    dictionary = json.load(dictionaryFile)
+
 yt = youtube(cookiesState,botDir)
+mod = moderation(dictionary)
 
 # 0 is a placeholder value
 voice = {"vc":0, "isPlaying":False,"queue":[],"yt-man":yt}
@@ -102,6 +107,12 @@ async def on_message(message):
 
     if message.content.startswith('test'):
         await message.channel.send(f"Hello world")
+
+    if mod.hasBadWords(message.content):
+        await message.channel.send(f"Hey! <@{message.author.id}> don't say bad words like that pls")
+
+    if mod.hasGoodWords(message.content):
+        await message.channel.send(f"<@{message.author.id}> thank you for using such kind words :)")
 
     await bot.process_commands(message)
 

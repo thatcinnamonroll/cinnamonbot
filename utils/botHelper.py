@@ -9,7 +9,9 @@ def ensureCacheDir():
 def ensureDataDir():
     if not os.path.exists(".data"):
         os.makedirs(".data")
-    if not os.path.isfile(".data/settings.json"):
-        with open("utils/defSettings.json","r") as defaultSettingsFile:
-            with open(".data/settings.json","w") as settingsFile:
-                settingsFile.write(defaultSettingsFile.read())
+    dataJsons = {".data/settings.json":"utils/defSettings.json",".data/dictionary.json":"utils/dict.json"}
+    for jsonToCheck in dataJsons:
+        if not os.path.isfile(jsonToCheck):
+            with open(dataJsons[jsonToCheck],"r") as defaultDataFile:
+                with open(jsonToCheck,"w") as dataFile:
+                    dataFile.write(defaultDataFile.read())
