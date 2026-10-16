@@ -1,6 +1,5 @@
 {
     "token":"YOUR-DISCORD-BOT-TOKEN-HERE",
     "allowedSongUrls":["https://youtube.com","https://soundcloud.com","https://youtu.be","youtube.com","soundcloud.com","youtu.be"],
-    "cookies":false,
-    "sayFunnyWords":false
+    "cookies":false
 }
